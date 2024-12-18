@@ -1,18 +1,26 @@
-// Tree object header
-/*
-Will hold all tree parts
-*/
 #ifndef TreeObject_h
 #define TreeObject_h
 
+#include "TreeNode.h"
+
 class TreeObject {
 private:
-public:
-  unsigned int numberOfChildren; // number of child nodes per node
-  int nodeCount;
-  int nodeEdgeCount;
+  int nodeCount; // number of child nodes
+  TreeNode *rootNode;
+  TreeNode *childNode;
 
-  TreeObject();
+public:
+  TreeObject(); // what parameter here?
+
+  void AddNode(TreeNode &newNode,
+               TreeNode uniqueId); // with known id. Where to put the id?
+  void deleteNode(TreeNode uniqueId);
+
+  /*
+    Displays the tree as a multidimensional list.
+    Each node has type, name and id.
+  */
+  void PrintTree();
 };
 
 #endif

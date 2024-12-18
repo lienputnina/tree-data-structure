@@ -13,12 +13,15 @@ public:
     Root node has level 0 (no edges to root)
     An array that holds all the children of a node - in main or TreeObject?
   */
-  string uniqueId;
-  string highLvlId; // ParentNode id
-  string name;      // node name
-  string type;      // node type. d- katalogs, f - fails
+  int uniqueId;  // number in the structure - 1st, 2nd etc.
+  int highLvlId; // ParentNode id
+  string name;   // node name
+  string type;   // node type. d- katalogs, f - fails
 
-  TreeNode(string uniqueId, string highLvlId, string name, string type);
+  TreeNode *leftNode;
+  TreeNode *rightNode;
+
+  TreeNode(int uniqueId, int highLvlId, string name, string type);
 };
 
 #endif
