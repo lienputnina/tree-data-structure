@@ -5,19 +5,24 @@
 
 class TreeObject {
 private:
-  int nodeCount; // number of child nodes
+  /*
+   Pointers to the root and leaf nodes to identify the first and last elements
+   of the tree. This is necessary to move the left and right node
+   pointers during the manipulation with the tree.
+   */
   TreeNode *rootNode;
-  TreeNode *childNode;
+  TreeNode *leafNode;
 
+  unsigned int numberOfChildren; // ? number of child nodes
+  int nodeCount;                 // ? current number of children for a node.
 public:
-  TreeObject(); // what parameter here?
+  TreeObject(unsigned int numberOfChildren); // ?
 
-  void AddNode(TreeNode &newNode,
-               TreeNode uniqueId); // with known id. Where to put the id?
-  void deleteNode(TreeNode uniqueId);
+  void AddNode(TreeNode &newNode, TreeNode uniqueId);
+  TreeNode *DeleteNode(TreeNode uniqueId);
 
   /*
-    Displays the tree as a multidimensional list.
+    ? Displays the tree as a multidimensional list - what does it mean?.
     Each node has type, name and id.
   */
   void PrintTree();

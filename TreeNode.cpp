@@ -1,4 +1,3 @@
-// Tree node implementation
 #include "TreeNode.h"
 
 TreeNode::TreeNode(int uniqueNodeId, int highLvlNodeId, string nodeName,
@@ -9,6 +8,10 @@ TreeNode::TreeNode(int uniqueNodeId, int highLvlNodeId, string nodeName,
   name = nodeName = "";
   type = nodeType = "";
 
-  nodeType = "f" ? "cannot add more children" : ""; // here or in main?
-  //   nodeName.contains(",") ? "Invalid name. Write one without commas"
+  /*
+    Initializing the pointers of the next and previous child node as NULL since
+    this element is not in the tree yet (nothing to point to).
+  */
+  leftNode = nullptr;
+  rightNode = nullptr;
 }
