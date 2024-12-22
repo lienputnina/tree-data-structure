@@ -20,7 +20,7 @@ public:
   TreeNode *FindNode(TreeNode *currentNode, int nodeId);
 
   void AddNode(unsigned int uniqueNodeId, unsigned int parentNodeId, string nodeName, string nodeType);
-  TreeNode *DeleteNode(int nodeId);
+  TreeNode *DeleteNode(unsigned int uniqueNodeId);
 
   void PrintTree();
 };

@@ -106,42 +106,30 @@ void TreeObject::AddNode(unsigned int uniqueNodeId, unsigned int parentNodeId, s
   cout << "Node " << newNode.name << " with the id: " << newNode.uniqueId << " successfully added as a child to the parent node with the id: " << parentNodeId << endl;
 };
 
-TreeNode *TreeObject::DeleteNode(int nodeId)
+TreeNode *TreeObject::DeleteNode(unsigned int uniqueNodeId)
 {
-  /*
-   Checking, if the tree is empty to make sure no elements can be added.
-   Returning a nullptr so the method caller knows the tree is empty and can
-   avoid accidentally dereferencing an invalid pointer.
- */
-  if (nodeCount == 0)
-  {
-    cout << "The tree is already empty." << endl;
-    cout << "\n";
-    return nullptr;
-  };
+  // Checking, if the node with the specified uniqueId exists in the tree.
+  TreeNode *nodeToDelete = FindNode(RootNode, uniqueNodeId);
 
-  /*
-  Mezgla dzēšana pēc tā identifikatora. Ja mezgls nav lapa, tad nodzēst visu
-  zaru (rekursīvs algoritms) - how to do?
-  1. If you delete a node, it stops pointing to anything
-  2. It's parent stops pointing to that node
-  3. If it's the last node (leaf), it stops pointing to its parent
-  4. If node is not a leaf, delete the whole branch (all nodes in it till root?)
-  */
-  TreeNode *temporaryElement = nodeElement;
-  `` if (nodeElement->type != "f")
+  if (nodeToDelete == nullptr)
   {
-    for (int i = 0; i < nodeCount; i++)
+    cout << "Node with the id: " << uniqueNodeId << " does not exist." << endl;
+    return nullptr;
+  }
+
+  // If the node is a leaf node (type = "f" or "fails"), delete the whole branch.
+  if (nodeToDelete->type != "f")
+  {
+    for (auto &node : nodeToDelete->nodeContainer)
     {
-      delete nodeElement; // ? where to put the id
+      TreeNode *removedNode = DeleteNode(uniqueNodeId);
+      return;
     }
   }
-  else
-  {
-    delete nodeElement; // some change here
-  };
 
-  nodeCount--;
+  // Delete the node itself.
+  delete nodeToDelete;
+  cout << "Node with the id: " << uniqueNodeId << " successfully deleted." << endl;
 
-  return nodeElement;
+  return;
 };
