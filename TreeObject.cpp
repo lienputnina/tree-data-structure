@@ -34,7 +34,7 @@ TreeNode *TreeObject::FindNode(TreeNode *currentNode, int nodeId)
     return currentNode;
   }
   /*
-  Iterating through the nodeContainer of the current node.AddNode.AddNode
+  Iterating through the nodeContainer of the current node.
   For each child node in the container, we create a pointer to the node and call the FindNode function recursively.
   If the target node is found, we return the pointer to it, ending the search.
   */
@@ -59,17 +59,13 @@ chatGPT helped to refactor this method. Previous problems:
 */
 void TreeObject::AddNode(unsigned int uniqueNodeId, unsigned int parentNodeId, string nodeName, string nodeType)
 {
-  // todo: write the delete method
-  // if type the same, replace the node with nre node and delete children (with the delete method), otherwise - error
 
   // Checking, if there is already a node with the same id in the tree.
   TreeNode *targetNode = FindNode(RootNode, uniqueNodeId);
 
   if (targetNode != nullptr && targetNode->type == nodeType)
   {
-    // Replace the parent node with the new node;
-    // Ignore the parentId  somehow
-    return;
+    DeleteNode(uniqueNodeId);
   }
   else if (targetNode->type != nodeType)
   {
@@ -111,6 +107,7 @@ TreeNode *TreeObject::DeleteNode(unsigned int uniqueNodeId)
   // Checking, if the node with the specified uniqueId exists in the tree.
   TreeNode *nodeToDelete = FindNode(RootNode, uniqueNodeId);
 
+  // If it doesn't exist, print an error message and return.
   if (nodeToDelete == nullptr)
   {
     cout << "Node with the id: " << uniqueNodeId << " does not exist." << endl;
@@ -127,7 +124,7 @@ TreeNode *TreeObject::DeleteNode(unsigned int uniqueNodeId)
     }
   }
 
-  // Delete the node itself.
+  // Deleting the node.
   delete nodeToDelete;
   cout << "Node with the id: " << uniqueNodeId << " successfully deleted." << endl;
 
