@@ -55,7 +55,6 @@ chatGPT helped to refactor this method. Previous problems:
 1. I was not checking if the parent node existed.
 2. Had not stored th result of FindNode anywhere
 3. Was not accessing the nodeContainer of the parent node properly.
-4. was not checking the leaf node condition properly.
 */
 void TreeObject::AddNode(unsigned int uniqueNodeId, unsigned int parentNodeId, string nodeName, string nodeType)
 {
@@ -129,4 +128,24 @@ TreeNode *TreeObject::DeleteNode(unsigned int uniqueNodeId)
   cout << "Node with the id: " << uniqueNodeId << " successfully deleted." << endl;
 
   return;
+};
+
+void TreeObject::PrintTree()
+{
+  if (nodeCount == 0)
+  {
+    cout << "The tree is empty. No nodes to show." << endl;
+    return;
+  }
+
+  // Starting traversing from the root node.
+  TreeNode *currentNode = RootNode;
+
+  // Figure out how to write the loop to traverse the tree.
+  for (auto &node : currentNode.nodeContainer)
+  {
+    cout << node.type << "(" << node.uniqueId << ")" << " - " << node.name << endl;
+  };
+
+  cout << endl;
 };
