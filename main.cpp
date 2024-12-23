@@ -1,9 +1,14 @@
 #include <iostream>
 #include <sstream>
 #include <string>
+
 #include "TreeObject.h"
 
 using namespace std;
+
+void HelpDesk()
+{
+}
 
 int main()
 {

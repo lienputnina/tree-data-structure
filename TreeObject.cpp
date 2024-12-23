@@ -7,8 +7,6 @@
 
 TreeObject::TreeObject()
 {
-  // used chatgpt to help optimize the RootNode initialization. Previously, I did not have it as a member variable
-  // Also, it was not initialized with "new" keyword.
   RootNode = new TreeNode(1, 0, "Root", "d");
   nodeCount = 1;
 };
