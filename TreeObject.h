@@ -8,7 +8,11 @@ using namespace std;
 class TreeObject
 {
 private:
-  int nodeCount; // current number of nodes in a tree.
+  int nodeCount;    // current number of nodes in a tree.
+  int currentLevel; // current tree level.
+
+  // Method for traversing the child nodes.
+  void TraverseTree(TreeNode *currentNode, int currentLevel);
 
 public:
   TreeObject();

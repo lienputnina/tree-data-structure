@@ -130,6 +130,50 @@ TreeNode *TreeObject::DeleteNode(unsigned int uniqueNodeId)
   return;
 };
 
+/*
+chatGPT helped to refactor this method. Previous problems:
+Had redundant for loop, unnecessary currentNode declaration, no indentation,
+Helped to refactor the indentation logic. I was mixing conditional logic and output logic.
+Had unnecessary Condition for Parent Node Check,
+Was incrementing the currentLevel for every child
+*/
+void TreeObject::TraverseTree(TreeNode *currentNode, int currentLevel)
+{
+
+  // Constructing indentation string based on currentLevel
+
+  if (currentNode == nullptr)
+  {
+    return;
+  };
+
+  string indentation(currentLevel, '\t'); // 1 tab per level
+
+  cout << indentation << currentNode->type << "(" << currentNode->uniqueId << ")" << " - " << currentNode->name << endl;
+
+  // If the current node is a leaf, return
+  if (currentNode->type == "f")
+  {
+    return;
+  };
+
+  /*
+  Iterating through the nodeContainer of the current node and calling the TraverseTree method
+  recursively for each child node.
+  */
+  for (auto &childNode : currentNode->nodeContainer)
+  {
+
+    TraverseTree(&childNode, currentLevel + 1);
+  };
+};
+
+/*
+chatGPT helped to refactor this method. Previous problems:
+1. Had a redundant RootNode check
+2. Had unnecessary for loop, where I was looping through the nodeContainer of the RootNode
+3. Was manually iterating  through RootNode->nodeContainer
+*/
 void TreeObject::PrintTree()
 {
   if (nodeCount == 0)
@@ -138,14 +182,10 @@ void TreeObject::PrintTree()
     return;
   }
 
-  // Starting traversing from the root node.
   TreeNode *currentNode = RootNode;
 
-  // Figure out how to write the loop to traverse the tree.
-  for (auto &node : currentNode.nodeContainer)
-  {
-    cout << node.type << "(" << node.uniqueId << ")" << " - " << node.name << endl;
-  };
+  // Starting traversal from the root node. Node level = 0;
+  TraverseTree(RootNode, 0);
 
   cout << endl;
 };
