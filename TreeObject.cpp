@@ -8,7 +8,6 @@
 TreeObject::TreeObject()
 {
   RootNode = new TreeNode(1, 0, "Root", "d");
-  nodeCount = 1;
 };
 
 TreeObject::~TreeObject()
@@ -24,7 +23,7 @@ Written by chatgpt.
 TreeNode *TreeObject::FindNode(TreeNode *currentNode, int nodeId)
 {
   /*
-  Checking if the current node's uniqueId matches the target id (the id of the node we want to add this one to).
+  Checking if the current node's uniqueId matches the target id.
   If the ids match, the function returns a pointer to the current node, ending the search.
   */
   if (currentNode->uniqueId == nodeId)
@@ -44,19 +43,18 @@ TreeNode *TreeObject::FindNode(TreeNode *currentNode, int nodeId)
       return foundNode;
     }
   }
-  cout << "Parent node with the id: " << nodeId << " does not exist." << endl;
+
   return nullptr;
 }
 
 /*
 chatGPT helped to refactor this method. Previous problems:
-1. I was not checking if the parent node existed.
-2. Had not stored th result of FindNode anywhere
-3. Was not accessing the nodeContainer of the parent node properly.
+1. There was no check for the existence of the parent node.
+2. The result of FindNode was not being stored in a variable.
+3. The nodeContainer was being accessed directly.
 */
-void TreeObject::AddNode(unsigned int uniqueNodeId, unsigned int parentNodeId, string nodeName, string nodeType)
+void TreeObject::AddNode(int uniqueNodeId, int parentNodeId, string nodeName, string nodeType)
 {
-
   // Checking, if there is already a node with the same id in the tree.
   TreeNode *targetNode = FindNode(RootNode, uniqueNodeId);
 
@@ -64,9 +62,11 @@ void TreeObject::AddNode(unsigned int uniqueNodeId, unsigned int parentNodeId, s
   {
     DeleteNode(uniqueNodeId);
   }
-  else if (targetNode->type != nodeType)
+
+  else if (targetNode != nullptr && targetNode->type != nodeType)
   {
     cout << "A node with the id " << uniqueNodeId << " already exists. Please, choose a different id" << endl;
+    return;
   }
 
   /*
@@ -83,47 +83,49 @@ void TreeObject::AddNode(unsigned int uniqueNodeId, unsigned int parentNodeId, s
   // Checking, if the parent node is a leaf node ("f" is the type name for "fails").
   if (parentNode->type == "f")
   {
-    cout << "This is a leaf node. Leaf nodes cannot have children." << endl;
+    cout << "Parent node with the id: " << parentNodeId << " is a leaf node. Leaf nodes cannot have children." << endl;
     return;
   };
 
   // Creating a new node with the required parameters.
   TreeNode newNode = TreeNode(uniqueNodeId, parentNodeId, nodeName, nodeType);
 
-  // Assigning a unique ID and parent ID to the new node.
-  newNode.uniqueId = nodeCount++;
-  newNode.parentId = parentNodeId;
-
   // Adding the new node to the parent node's nodeContainer.
   parentNode->nodeContainer.push_back(newNode);
   cout << "Node " << newNode.name << " with the id: " << newNode.uniqueId << " successfully added as a child to the parent node with the id: " << parentNodeId << endl;
 };
 
-TreeNode *TreeObject::DeleteNode(unsigned int uniqueNodeId)
+void TreeObject::DeleteNode(int id)
 {
   // Checking, if the node with the specified uniqueId exists in the tree.
-  TreeNode *nodeToDelete = FindNode(RootNode, uniqueNodeId);
+  TreeNode *nodeToDelete = FindNode(RootNode, id);
+  TreeNode *parentNode = FindNode(RootNode, nodeToDelete->parentId);
 
-  // If it doesn't exist, print an error message and return.
   if (nodeToDelete == nullptr)
   {
-    cout << "Node with the id: " << uniqueNodeId << " does not exist." << endl;
-    return nullptr;
+    cout << "Node with the id: " << id << " does not exist." << endl;
+    return;
   }
 
-  // If the node is a leaf node (type = "f" or "fails"), delete the whole branch.
-  if (nodeToDelete->type != "f")
+  if (parentNode == nullptr)
   {
-    for (auto &node : nodeToDelete->nodeContainer)
+    cout << "Parent node for the node with the id: " << id << " does not exist." << endl;
+    return;
+  }
+
+  // Removing link from parent node
+  int nodePosition = -1;
+  for (int i = 0; i < parentNode->nodeContainer.size(); i++)
+  {
+    if (parentNode->nodeContainer[i].uniqueId == id)
     {
-      TreeNode *removedNode = DeleteNode(uniqueNodeId);
-      return;
+      nodePosition = i;
+      break;
     }
   }
+  parentNode->nodeContainer.erase(parentNode->nodeContainer.begin() + nodePosition);
 
-  // Deleting the node.
-  delete nodeToDelete;
-  cout << "Node with the id: " << uniqueNodeId << " successfully deleted." << endl;
+  cout << "Node with the id: " << id << " successfully deleted." << endl;
 
   return;
 };
@@ -135,34 +137,29 @@ Helped to refactor the indentation logic. I was mixing conditional logic and out
 Had unnecessary Condition for Parent Node Check,
 Was incrementing the currentLevel for every child
 */
-void TreeObject::TraverseTree(TreeNode *currentNode, int currentLevel)
+void TreeObject::PrintTreeNodes(TreeNode *currentNode, int currentLevel)
 {
-
-  // Constructing indentation string based on currentLevel
-
   if (currentNode == nullptr)
   {
     return;
   };
 
-  string indentation(currentLevel, '\t'); // 1 tab per level
+  string indentation(currentLevel * 4, ' '); // 4 tabs per level
 
   cout << indentation << currentNode->type << "(" << currentNode->uniqueId << ")" << " - " << currentNode->name << endl;
 
-  // If the current node is a leaf, return
   if (currentNode->type == "f")
   {
     return;
   };
 
   /*
-  Iterating through the nodeContainer of the current node and calling the TraverseTree method
+  Iterating through the nodeContainer of the current node and calling the PrintTreeNodes method
   recursively for each child node.
   */
   for (auto &childNode : currentNode->nodeContainer)
   {
-
-    TraverseTree(&childNode, currentLevel + 1);
+    PrintTreeNodes(&childNode, currentLevel + 1);
   };
 };
 
@@ -172,18 +169,14 @@ chatGPT helped to refactor this method. Previous problems:
 2. Had unnecessary for loop, where I was looping through the nodeContainer of the RootNode
 3. Was manually iterating  through RootNode->nodeContainer
 */
-void TreeObject::PrintTree()
+void TreeObject::PrintTree(int uniqueNodeId)
 {
-  if (nodeCount == 0)
+  TreeNode *currentNode = FindNode(RootNode, uniqueNodeId);
+
+  if (currentNode != nullptr)
   {
-    cout << "The tree is empty. No nodes to show." << endl;
-    return;
+    PrintTreeNodes(currentNode, 1);
   }
-
-  TreeNode *currentNode = RootNode;
-
-  // Starting traversal from the root node. Node level = 0;
-  TraverseTree(RootNode, 0);
 
   cout << endl;
 };

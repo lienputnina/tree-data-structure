@@ -8,11 +8,8 @@ using namespace std;
 class TreeObject
 {
 private:
-  int nodeCount;    // current number of nodes in a tree.
-  int currentLevel; // current tree level.
-
   // Method for traversing the child nodes.
-  void TraverseTree(TreeNode *currentNode, int currentLevel);
+  void PrintTreeNodes(TreeNode *currentNode, int currentLevel);
 
 public:
   TreeObject();
@@ -20,13 +17,13 @@ public:
 
   TreeNode *RootNode;
 
-  // method for finding a node in the tree.
+  // Method for finding a node in the tree.
   TreeNode *FindNode(TreeNode *currentNode, int nodeId);
 
-  void AddNode(unsigned int uniqueNodeId, unsigned int parentNodeId, string nodeName, string nodeType);
-  TreeNode *DeleteNode(unsigned int uniqueNodeId);
+  void AddNode(int uniqueNodeId, int parentNodeId, string nodeName, string nodeType);
+  void DeleteNode(int uniqueNodeId);
 
-  void PrintTree();
+  void PrintTree(int uniqueNodeId);
 };
 
 #endif
